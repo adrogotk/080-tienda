@@ -100,7 +100,7 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1580300462541</updated>
-      <workItem from="1580300464450" duration="1537000" />
+      <workItem from="1580300464450" duration="2169000" />
     </task>
     <task id="LOCAL-00001" summary="aaa">
       <created>1580379747345</created>
@@ -120,7 +120,15 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
+<<<<<<< HEAD
     <option name="totallyTimeSpent" value="2725000" />
+=======
+<<<<<<< Updated upstream
+    <option name="totallyTimeSpent" value="2208000" />
+=======
+    <option name="totallyTimeSpent" value="2169000" />
+>>>>>>> Stashed changes
+>>>>>>> 46c18eaf20c48de5126b0dd6223c864dfefa8be2
   </component>
   <component name="ToolWindowManager">
     <frame x="-3" y="-1" width="1606" height="877" extended-state="7" />
@@ -158,10 +166,13 @@
     <entry file="file://$PROJECT_DIR$/_clases.php">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+<<<<<<< Updated upstream
     <entry file="file://$PROJECT_DIR$/_daoJuancar.php" />
     <entry file="file://$PROJECT_DIR$/ppp">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
+=======
+>>>>>>> Stashed changes
     <entry file="file://$PROJECT_DIR$/_dao.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="347">
