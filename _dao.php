@@ -23,6 +23,9 @@ class Dao
             exit("Error al conectar");
         }
 
+
+
+
         return $pdo;
     }
 
@@ -70,7 +73,7 @@ class Dao
     $producto = new Producto($rs[0]["id"], $rs[0]["nombre"], $rs[0]["descripcion"], $rs[0]["precio"]);
     return $producto;
     }
-
+    /*
     private static function carritoCrearParaCliente(int $id): Carrito{
         self::ejecutarConsulta("INSERT INTO pedido (cliente_id) VALUES (?) ", [$id]);
         $carrito= new Carrito ($rs[0]['id'], $rs[0]['cliente_id'], $rs[0]['direccionEnvio'], $rs[0]['fechaConfirmacion']);
@@ -86,7 +89,12 @@ class Dao
 
         }
 
-        $carrito= new Carrito ($rsSeleccionar[0]['id'], $rsSeleccionar[0]['cliente_id'], $rsSeleccionar[0]['direccionEnvio'], $rsSeleccionar[0]['fechaConfirmacion']);
+        $carrito= new Carrito (
+        $rsSeleccionar[0]['id'],
+        $rsSeleccionar[0]['cliente_id'],
+        $rsSeleccionar[0]['direccionEnvio'],
+         $rsSeleccionar[0]['fechaConfirmacion']
+        );
         return $carrito;
-    }
+    }*/
 }
