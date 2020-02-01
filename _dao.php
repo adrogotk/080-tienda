@@ -74,11 +74,14 @@ class DAO
     return $producto;
     }
 
+
     private static function carritoCrearParaCliente(int $id): Carrito{
         self::ejecutarConsulta("INSERT INTO pedido (cliente_id, direccionEnvio, fechaConfirmacion) VALUES (?, NULL, NULL) ", [$id]);
-    }
+
+    
 
     public static function carritoObtenerParaCliente(int $id): Carrito{
+
 
         $rs =self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
         if(!$rs){
@@ -86,9 +89,16 @@ class DAO
             self::carritoCrearParaCliente($id);
             $rs=self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
 
+        $rsComprobacion =self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
+        if(!$rsComprobacion){
+
+            self::carritoCrearParaCliente($id);
+            $rsSeleccionar=self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
+
         }
 
         $carrito= new Carrito (
+
         $rs[0]['id'],
         $rs[0]['cliente_id'],
         $rs[0]['direccionEnvio'],
