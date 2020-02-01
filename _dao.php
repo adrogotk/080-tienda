@@ -73,28 +73,61 @@ class DAO
     $producto = new Producto($rs[0]["id"], $rs[0]["nombre"], $rs[0]["descripcion"], $rs[0]["precio"]);
     return $producto;
     }
-    /*
+
     private static function carritoCrearParaCliente(int $id): Carrito{
-        self::ejecutarConsulta("INSERT INTO pedido (cliente_id) VALUES (?) ", [$id]);
-        $carrito= new Carrito ($rs[0]['id'], $rs[0]['cliente_id'], $rs[0]['direccionEnvio'], $rs[0]['fechaConfirmacion']);
+        self::ejecutarConsulta("INSERT INTO pedido (cliente_id, direccionEnvio, fechaConfirmacion) VALUES (?, NULL, NULL) ", [$id]);
     }
 
     public static function carritoObtenerParaCliente(int $id): Carrito{
 
-        $rsComprobacion =self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
-        if(!$rsComprobacion){
+        $rs =self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
+        if(!$rs){
 
             self::carritoCrearParaCliente($id);
-            $rsSeleccionar=self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
+            $rs=self::ejecutarConsulta("select * from pedido where cliente_id=? AND fechaConfirmacion=null ",[$id]);
 
         }
 
         $carrito= new Carrito (
-        $rsSeleccionar[0]['id'],
-        $rsSeleccionar[0]['cliente_id'],
-        $rsSeleccionar[0]['direccionEnvio'],
-         $rsSeleccionar[0]['fechaConfirmacion']
+        $rs[0]['id'],
+        $rs[0]['cliente_id'],
+        $rs[0]['direccionEnvio'],
+         $rs[0]['fechaConfirmacion']
         );
         return $carrito;
-    }*/
+    }
+    private static function carritoObtenerUnidadesProducto($clienteId, $productoId, $pedidoId){
+        self::ejecutarConsulta("SELECT unidades, pedido_id FROM linea, pedido WHERE pedido.id=linea.pedido_id AND cliente_id=? AND producto_id=? ", [$clienteId, $productoId]);
+    }
+    private static function carritoEstablecerUnidadesProducto($clienteId, $productoId, $nuevaCantidadUnidades, $pedidoId){
+        $rs = self::carritoObtenerUnidadesProducto($clienteId, $productoId);
+        // $rsPrecio= self::ejecutarConsulta("SELECT precio FROM producto WHERE id=? ", [$productoId]);
+        // $precioProducto=$rsPrecio[0]['precio'];
+        if (!$rs && $nuevaCantidadUnidades>1){
+            self::ejecutarConsulta("INSERT INTO linea (pedidoId, producto_id, unidades, precioUnitario) VALUES (?, ?, ?, NULL )", [$pedidoId, $productoId, $nuevaCantidadUnidades]);
+            // PrecioUnitario en vez de null-> $precioProducto*$nuevaCantidadUnidades
+        }
+        else if($rs && $nuevaCantidadUnidades>1){
+            self::ejecutarConsulta("UPDATE linea SET unidades=? WHERE pedido_id=? AND producto_id=?", [$nuevaCantidadUnidades, $pedidoId, $productoId]);
+            // Habria que añadir al set el PrecioUnitario ($precioProducto * $nuevaCantidadUnidades)
+        }
+        else if ($rs && $nuevaCantidadUnidades<=0) {
+            self::ejecutarConsulta("DELETE FROM linea WHERE pedido_id=? AND producto_id=?", [$pedidoId, $productoId]);
+        }
+        /* else { // Quieren quitar unidades de un prodcuto que no existe, informar al usuario de ello.
+
+
+         */
+    }
+    public static function carritoVariarUnidadesProducto($clienteId, $productoId, $variacionUnidades) {
+        $rs = self::carritoObtenerUnidadesProducto($clienteId, $productoId);
+        $pedidoId=$rs[0]['pedido_id'];
+        if (!$rs){
+            $nuevaCantidadUnidades = $variacionUnidades;
+        }
+        else {
+            $nuevaCantidadUnidades = $variacionUnidades + $rs[0]['unidades'];
+        }
+        self::carritoEstablecerUnidadesProducto($clienteId, $productoId, $nuevaCantidadUnidades, $pedidoId);
+    }
 }

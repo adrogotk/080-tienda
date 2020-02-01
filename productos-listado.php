@@ -6,7 +6,7 @@ require_once "_dao.php";
 $productos = DAO::productoObtenerTodos();
 
 ?>
-
+<!-- -->
 
 
 <html>
